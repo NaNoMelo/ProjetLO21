@@ -6,4 +6,4 @@ set(CMAKE_C_STANDARD 11)
 include_directories(.)
 
 add_executable(ProjetLO21
-        main.c)
+        main.c Individu/Individu.c Individu/Individu.h Population/Population.c Population/Population.h)

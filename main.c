@@ -3,7 +3,20 @@
 //
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
+#include "Individu/Individu.h"
+#include "Population/Population.h"
 
 int main() {
-    printf("hello world !");
+    srand(time(NULL));
+    Population population = createPopulation(50);
+    afficherPopulation(population, "Population");
+    Population last = population;
+    while (last->next != NULL) {
+        last = last->next;
+    }
+    quick_sort(population, last);
+    afficherPopulation(population, "Population triée");
+
+    return 0;
 }
