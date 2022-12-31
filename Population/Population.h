@@ -13,7 +13,7 @@ typedef struct IndivElem {
 
 typedef struct IndivElem *Population;
 
-Population createPopulation(int toCreate);
+Population createPopulation(int toCreate, int individuSize);
 
 Population croiserPopulation(Population population, float pCroise);
 
@@ -21,8 +21,12 @@ int nbIndividus(Population population);
 
 void afficherPopulation(Population population, char nom[]);
 
-Population parition(Population first, Population last);
+Population partition(Population first, Population last);
 
 void quick_sort(Population first, Population last);
+
+Population getIndividuAtIndex(Population population, int index);
+
+int getIndexOfIndividu(Population population, Individu individu);
 
 #endif //PROJETLO21_POPULATION_H

@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define A (-1)
+#define B 1
+
 int intPow(int base, int exp) {
     int result = 1;
     for (int i = 0; i < exp; i++) {
@@ -59,7 +62,6 @@ int nbBits(Individu individu) {
 
 float quality(Individu individu) {
     // Retourne la qualité de l'individu
-    int A = -1, B = 1;
     int x = decodeIndividu(individu);
     int pow = intPow(2, nbBits(individu));
     float X = ((float) x / pow) * (B - A) + A;
@@ -69,7 +71,7 @@ float quality(Individu individu) {
 void croiserIndividus(float pCroise, Individu individu1, Individu individu2) {
     // Croise aléatoirement les éléments de deux individus
     while (individu1 != NULL && individu2 != NULL) {
-        if (rand() / (RAND_MAX + 1) <= pCroise) {
+        if (rand() % 100 < pCroise * 100) {
             Bit tmp = individu1->val;
             individu1->val = individu2->val;
             individu2->val = tmp;
