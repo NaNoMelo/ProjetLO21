@@ -6,6 +6,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/**
+ * Crée une population de taille toCreate avec des individus de taille individuSize
+ * @param toCreate
+ * @param individuSize
+ * @return
+ */
 Population createPopulation(int toCreate, int individuSize) {
     // Créer la population et la remplir avec des individus aléatoires
     Population population = (Population) malloc(sizeof(IndivElem));
@@ -18,47 +24,70 @@ Population createPopulation(int toCreate, int individuSize) {
     return population;
 }
 
-//croiser les individus de la population aléatoirement deux à deux
+/**
+ * Croise la population en fonction de la probabilité pCroise
+ * @param population
+ * @param pCroise
+ * @return
+ */
 Population croiserPopulation(Population population, float pCroise) {
     // Croiser la population aléatoirement deux à deux
-    Population p = population;
-    Population q = NULL;
     Population newPopulation = NULL;
-    Population newPopLast = NULL;
 
-    while (p != NULL && nbIndividus(p) > 1) {
-        q = getIndividuAtIndex(p, rand() % (nbIndividus(p) - 1) + 1);
-        croiserIndividus(pCroise, p->individu, q->individu);
-        if (newPopulation != NULL) {
-            newPopLast = newPopulation;
+    while (population != NULL && nbIndividus(population) > 1) {
+        // Select a random individual from the population
+        int index = rand() % (nbIndividus(population) - 1) + 1;
+        Population q = getIndividuAtIndex(population, index);
+
+        // Perform crossover between the current individual and the selected individual
+        croiserIndividus(pCroise, population->individu, q->individu);
+
+        // Add the selected individual to the new population
+        Population newPopLast = newPopulation;
+        if (newPopulation == NULL) {
+            newPopulation = q;
+        } else {
             while (newPopLast->next != NULL) {
                 newPopLast = newPopLast->next;
             }
             newPopLast->next = q;
-        } else {
-            newPopulation = q;
-            newPopLast = q;
         }
-        Population prevQ = p;
+
+        // Remove the selected individual from the original population
+        Population prevQ = population;
         while (prevQ->next != q && prevQ->next != NULL) {
             prevQ = prevQ->next;
         }
         prevQ->next = q->next;
-        newPopLast->next->next = p;
-        p = p->next;
-        newPopLast->next->next->next = NULL;
+        q->next = NULL;
+
+        // Move on to the next individual in the original population
+        population = population->next;
     }
-    if (nbIndividus(p) == 1) {
-        newPopLast = newPopulation;
-        while (newPopLast != NULL) {
-            newPopLast = newPopLast->next;
+
+    // Add the remaining individual (if any) to the new population
+    if (population != NULL) {
+        if (newPopulation == NULL) {
+            newPopulation = population;
+        } else {
+            Population newPopLast = newPopulation;
+            while (newPopLast->next != NULL) {
+                newPopLast = newPopLast->next;
+            }
+            newPopLast->next = population;
+            population->next = NULL;
         }
-        newPopLast = p;
-        newPopLast->next = NULL;
     }
+
     return newPopulation;
 }
 
+/**
+ * Retourne le nombre d'individus dans la population
+ * @param population
+ * @param index
+ * @return
+ */
 Population getIndividuAtIndex(Population population, int index) {
     // Retourne l'individu à l'index donné
     for (int i = 0; i < index; i++) {
@@ -67,8 +96,13 @@ Population getIndividuAtIndex(Population population, int index) {
     return population;
 }
 
+/**
+ * Retourne l'index de l'individu donné
+ * @param population
+ * @param individu
+ * @return
+ */
 int getIndexOfIndividu(Population population, Individu individu) {
-    // Retourne l'index de l'individu donné
     int i = 0;
     while (population != NULL) {
         if (population->individu == individu) {
@@ -80,6 +114,11 @@ int getIndexOfIndividu(Population population, Individu individu) {
     return -1;
 }
 
+/**
+ * Retourne le nombre d'individus dans la population
+ * @param population
+ * @return
+ */
 int nbIndividus(Population population) {
 // Retourne le nombre d'individus de la population
     int i = 0;
@@ -90,7 +129,11 @@ int nbIndividus(Population population) {
     return i;
 }
 
-
+/**
+ * Affiche la population
+ * @param population
+ * @param nom
+ */
 void afficherPopulation(Population population, char nom[]) {
     // Affiche la population
     Population p = population;
@@ -103,7 +146,11 @@ void afficherPopulation(Population population, char nom[]) {
     }
 }
 
-//clone une population et ses individus
+/**
+ * clone une population et ses individus
+ * @param population
+ * @return
+ */
 Population clonePopulation(Population population) {
     Population clone = (Population) malloc(sizeof(IndivElem));
     clone->individu = cloneIndividu(population->individu);
@@ -115,7 +162,10 @@ Population clonePopulation(Population population) {
     return clone;
 }
 
-//supprime une population et ses individus
+/**
+ * supprime une population et ses individus
+ * @param population
+ */
 void deletePopulation(Population population) {
     if (population->next != NULL) {
         deletePopulation(population->next);
@@ -124,6 +174,12 @@ void deletePopulation(Population population) {
     free(population);
 }
 
+/**
+ * Coupe la population en deux
+ * @param first
+ * @param last
+ * @return
+ */
 Population partition(Population first, Population last) {
     // Get first node of given linked list
     Population pivot = first;
@@ -153,6 +209,11 @@ Population partition(Population first, Population last) {
     return pivot;
 }
 
+/**
+ * Trie la population par qualité
+ * @param first
+ * @param last
+ */
 void quick_sort(Population first, Population last) {
     if (first == last) {
         return;

@@ -5,6 +5,12 @@
 #define A (-1)
 #define B 1
 
+/**
+ * fonction pow pour les puissances
+ * @param base
+ * @param exp
+ * @return
+ */
 int intPow(int base, int exp) {
     int result = 1;
     for (int i = 0; i < exp; i++) {
@@ -13,6 +19,11 @@ int intPow(int base, int exp) {
     return result;
 }
 
+/**
+ * Affiche un individu
+ * @param individu
+ * @param nom
+ */
 void afficherIndividu(Individu individu, char nom[]) {
     Individu p = individu;
     printf("%s : ", nom);
@@ -23,6 +34,11 @@ void afficherIndividu(Individu individu, char nom[]) {
     printf("\n\tValeur: %d\n\tQualite: %f\n", decodeIndividu(individu), quality(individu));
 }
 
+/**
+ * Crée un individu
+ * @param toCreate
+ * @return
+ */
 Individu createIndividu(int toCreate) {
     // Créer l'individu et le remplir avec 8 bits aléatoires
     Individu individu = (Individu) malloc(sizeof(BitElem));
@@ -35,6 +51,11 @@ Individu createIndividu(int toCreate) {
     return individu;
 }
 
+/**
+ * Retourne la valeur de l'individu
+ * @param individu
+ * @return
+ */
 int decodeIndividu(Individu individu) {
     // Décode l'individu pour obtenir la valeur des bits en décimal
     int i = nbBits(individu) - 1;
@@ -49,7 +70,11 @@ int decodeIndividu(Individu individu) {
     return val;
 }
 
-
+/**
+ * Retourne le nombre de bits de l'individu
+ * @param individu
+ * @return
+ */
 int nbBits(Individu individu) {
     // Retourne le nombre de bits de l'individu
     int i = 0;
@@ -60,6 +85,11 @@ int nbBits(Individu individu) {
     return i;
 }
 
+/**
+ * Retourne la qualité de l'individu
+ * @param individu
+ * @return
+ */
 float quality(Individu individu) {
     // Retourne la qualité de l'individu
     int x = decodeIndividu(individu);
@@ -68,6 +98,12 @@ float quality(Individu individu) {
     return X * X;
 }
 
+/**
+ * Croise aléatoirement les éléments de deux individus
+ * @param pCroise
+ * @param individu1
+ * @param individu2
+ */
 void croiserIndividus(float pCroise, Individu individu1, Individu individu2) {
     // Croise aléatoirement les éléments de deux individus
     while (individu1 != NULL && individu2 != NULL) {
@@ -81,7 +117,11 @@ void croiserIndividus(float pCroise, Individu individu1, Individu individu2) {
     }
 }
 
-//retourne un clone de l'individu
+/**
+ * retourne un clone de l'individu
+ * @param individu
+ * @return
+ */
 Individu cloneIndividu(Individu individu) {
     Individu clone = (Individu) malloc(sizeof(BitElem));
     clone->val = individu->val;
@@ -93,31 +133,13 @@ Individu cloneIndividu(Individu individu) {
     return clone;
 }
 
-//supprime l'individu
+/**
+ * Supprime un individu
+ * @param individu
+ */
 void deleteIndividu(Individu individu) {
     if (individu->next != NULL) {
         deleteIndividu(individu->next);
     }
     free(individu);
-}
-
-//quciksort pour trier les individus d'une population par qualité
-void quickSort2(Individu *population, int debut, int fin) {
-    int gauche = debut - 1;
-    int droite = fin + 1;
-    const float pivot = quality(population[debut]);
-    if (debut >= fin) {
-        return;
-    }
-    while (1) {
-        do droite--; while (quality(population[droite]) > pivot);
-        do gauche++; while (quality(population[gauche]) < pivot);
-        if (gauche < droite) {
-            Individu tmp = population[gauche];
-            population[gauche] = population[droite];
-            population[droite] = tmp;
-        } else break;
-    }
-    quickSort2(population, debut, droite);
-    quickSort2(population, droite + 1, fin);
 }
