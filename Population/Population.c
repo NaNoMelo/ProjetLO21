@@ -186,13 +186,12 @@ Population partition(Population first, Population last) {
     Population front = first;
     Individu temp;
     while (front != NULL && front != last) {
-        if (quality(front->individu) > quality(last->individu)) {
-            pivot = first;
-
+        if (quality(front->individu) < quality(last->individu)) {
             // Swapping  node values
             temp = first->individu;
             first->individu = front->individu;
             front->individu = temp;
+            pivot = first;
 
             // Visiting the next node
             first = first->next;
@@ -215,16 +214,10 @@ Population partition(Population first, Population last) {
  * @param last
  */
 void quick_sort(Population first, Population last) {
-    if (first == last) {
+    if (first == NULL || first == last) {
         return;
     }
     Population pivot = partition(first, last);
-
-    if (pivot != NULL && pivot->next != NULL) {
-        quick_sort(pivot->next, last);
-    }
-
-    if (pivot != NULL && first != pivot) {
-        quick_sort(first, pivot);
-    }
+    quick_sort(first, pivot);
+    quick_sort(pivot->next, last);
 }
