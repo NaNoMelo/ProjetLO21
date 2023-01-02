@@ -7,9 +7,9 @@
 
 #define F(X) (-log(X))
 
-void afficherIndividu(Individu individu, char nom[], float A, float B, float pCroise, int nbSelect) {
+void afficherIndividu(Individu individu, char nom[], float A, float B) {
     Individu p = individu;
-    printf("pCroise : %.1f, nbSelect: %d :", pCroise, nbSelect);
+    printf("%s : ", nom);
     while (p != NULL) {
         printf("%d", p->val);
         p = p->next;
