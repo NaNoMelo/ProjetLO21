@@ -19,11 +19,11 @@ Population croiserPopulation(Population population, float pCroise);
 
 int nbIndividus(Population population);
 
-void afficherPopulation(Population population, char nom[]);
+void afficherPopulation(Population population, char nom[], float a, float b);
 
-Population partition(Population first, Population last);
+Population partition(Population first, Population last, float a, float b);
 
-void quick_sort(Population first, Population last);
+void quick_sort(Population first, Population last, float a, float b);
 
 Population getIndividuAtIndex(Population population, int index);
 
@@ -31,6 +31,6 @@ Population populationVide(int nbIndividus);
 
 void deletePopulation(Population population);
 
-Population selectPopulation(Population population, int tselect);
+Population selectPopulation(Population population, int nbSelect);
 
 #endif //PROJETLO21_POPULATION_H

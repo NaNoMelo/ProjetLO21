@@ -1,19 +1,20 @@
 #include "Individu.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
-#define A (-1)
-#define B 1
 #define pow2(n) (1 << (n))
 
-void afficherIndividu(Individu individu, char nom[]) {
+#define F(X) (-log(X))
+
+void afficherIndividu(Individu individu, char nom[], float A, float B, float pCroise, int nbSelect) {
     Individu p = individu;
-    printf("%s : ", nom);
+    printf("pCroise : %.1f, nbSelect: %d :", pCroise, nbSelect);
     while (p != NULL) {
         printf("%d", p->val);
         p = p->next;
     }
-    printf("\n\tValeur: %d\n\tQualite: %f\n", decodeIndividu(individu), quality(individu));
+    printf("\n\tValeur: %d\n\tQualite: %f\n", decodeIndividu(individu), quality(individu, A, B));
 }
 
 Individu createIndividu(int toCreate) {
@@ -42,7 +43,6 @@ int decodeIndividu(Individu individu) {
     return val;
 }
 
-
 int nbBits(Individu individu) {
     // Retourne le nombre de bits de l'individu
     int i = 0;
@@ -53,12 +53,12 @@ int nbBits(Individu individu) {
     return i;
 }
 
-float quality(Individu individu) {
+float quality(Individu individu, float a, float b) {
     // Retourne la qualité de l'individu
     int x = decodeIndividu(individu);
     int pow = pow2(nbBits(individu));
-    float X = ((float) x / pow) * (B - A) + A;
-    return X * X;
+    float X = ((float) x / pow) * (b - a) + a;
+    return -log(X);
 }
 
 void croiserIndividus(float pCroise, Individu individu1, Individu individu2) {

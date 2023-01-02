@@ -11,7 +11,9 @@ typedef BitElem *Individu;
 
 void copyIndividu(Individu source, Individu destination);
 
-void afficherIndividu(Individu individu, char nom[]);
+void afficherIndividu(Individu individu, char nom[], float A, float B, float pCroise, int nbSelect);
+
+void printCSV(Individu individu, float pCroise, int tSelect, int taillePopulation, int nGen, float A, float B);
 
 Individu createIndividu(int toCreate);
 
@@ -19,7 +21,7 @@ int decodeIndividu(Individu individu);
 
 int nbBits(Individu individu);
 
-float quality(Individu individu);
+float quality(Individu individu, float a, float b);
 
 void croiserIndividus(float pCroise, Individu individu1, Individu individu2);
 

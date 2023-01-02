@@ -58,12 +58,12 @@ Population getIndividuAtIndex(Population population, int index) {
     return population;
 }
 
-Population selectPopulation(Population population, int tselect) {
-    // Sélectionne les tselect premiers individus de la population et remplace le reste par des copies de ces individus
+Population selectPopulation(Population population, int nbSelect) {
+    // Sélectionne les nbSelect premiers individus de la population et remplace le reste par des copies de ces individus
     Population p = population;
-    Population selection = populationVide(tselect);
+    Population selection = populationVide(nbSelect);
     Population selectionLast = selection;
-    for (int i = 0; i < tselect; i++) {
+    for (int i = 0; i < nbSelect; i++) {
         selectionLast->individu = p->individu;
         p = p->next;
         if (selectionLast->next != NULL) {
@@ -72,7 +72,7 @@ Population selectPopulation(Population population, int tselect) {
     }
     selectionLast->next = selection;
 
-    for (int i = tselect; i < nbIndividus(population); i++) {
+    for (int i = nbSelect; i < nbIndividus(population); i++) {
         copyIndividu(selection->individu, p->individu);
         selection = selection->next;
         p = p->next;
@@ -91,13 +91,13 @@ int nbIndividus(Population population) {
 }
 
 
-void afficherPopulation(Population population, char nom[]) {
+void afficherPopulation(Population population, char nom[], float a, float b) {
     // Affiche la population
     Population p = population;
     int i = 0;
     printf("%s : \n", nom);
     while (p != NULL) {
-        afficherIndividu(p->individu, "Individu");
+        afficherIndividu(p->individu, "Individu", a, b, 0, 0);
         p = p->next;
         i++;
     }
@@ -127,13 +127,13 @@ void deletePopulation(Population population) {
     free(population);
 }
 
-Population partition(Population first, Population last) {
+Population partition(Population first, Population last, float a, float b) {
     // Get first node of given linked list
     Population pivot = first;
     Population front = first;
     Individu temp;
     while (front != NULL && front != last) {
-        if (quality(front->individu) > quality(last->individu)) {
+        if (quality(front->individu, a, b) > quality(last->individu, a, b)) {
             pivot = first;
 
             // Swapping  node values
@@ -156,17 +156,17 @@ Population partition(Population first, Population last) {
     return pivot;
 }
 
-void quick_sort(Population first, Population last) {
+void quick_sort(Population first, Population last, float a, float b) {
     if (first == last) {
         return;
     }
-    Population pivot = partition(first, last);
+    Population pivot = partition(first, last, a, b);
 
     if (pivot != NULL && pivot->next != NULL) {
-        quick_sort(pivot->next, last);
+        quick_sort(pivot->next, last, a, b);
     }
 
     if (pivot != NULL && first != pivot) {
-        quick_sort(first, pivot);
+        quick_sort(first, pivot, a, b);
     }
 }
