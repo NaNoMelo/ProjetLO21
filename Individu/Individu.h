@@ -9,15 +9,7 @@ typedef struct BitElem {
 
 typedef BitElem *Individu;
 
-Individu ajoutTete(Individu l, Bit val);
-
-Individu ajoutFin(Individu l, Bit val);
-
-Individu suppTete(Individu l);
-
-Individu suppFin(Individu l);
-
-void recherche(Individu l, Bit val);
+void copyIndividu(Individu source, Individu destination);
 
 void afficherIndividu(Individu individu, char nom[]);
 

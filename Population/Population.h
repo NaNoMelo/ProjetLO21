@@ -27,6 +27,10 @@ void quick_sort(Population first, Population last);
 
 Population getIndividuAtIndex(Population population, int index);
 
-int getIndexOfIndividu(Population population, Individu individu);
+Population populationVide(int nbIndividus);
+
+void deletePopulation(Population population);
+
+Population selectPopulation(Population population, int tselect);
 
 #endif //PROJETLO21_POPULATION_H

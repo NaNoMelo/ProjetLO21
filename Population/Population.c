@@ -18,44 +18,35 @@ Population createPopulation(int toCreate, int individuSize) {
     return population;
 }
 
-//croiser les individus de la population aléatoirement deux à deux
 Population croiserPopulation(Population population, float pCroise) {
-    // Croiser la population aléatoirement deux à deux
-    Population p = population;
-    Population q = NULL;
-    Population newPopulation = NULL;
-    Population newPopLast = NULL;
+    // Croise la population en fonction de la probabilité de croisement
+    Population populationInitiale = population;
+    Population newPopulation = populationVide(nbIndividus(population));
+    Population newPopulationLast = newPopulation;
+    Population populationLast = population;
+    Population individu2;
+    while (populationLast->next != NULL) {
+        populationLast = populationLast->next;
+    }
+    while (population != NULL) {
+        do {
+            individu2 = getIndividuAtIndex(population, (rand() % (nbIndividus(population) - 1)) + 1);
+        } while (individu2->individu == NULL);
 
-    while (p != NULL && nbIndividus(p) > 1) {
-        q = getIndividuAtIndex(p, rand() % (nbIndividus(p) - 1) + 1);
-        croiserIndividus(pCroise, p->individu, q->individu);
-        if (newPopulation != NULL) {
-            newPopLast = newPopulation;
-            while (newPopLast->next != NULL) {
-                newPopLast = newPopLast->next;
-            }
-            newPopLast->next = q;
-        } else {
-            newPopulation = q;
-            newPopLast = q;
+        croiserIndividus(pCroise, population->individu, individu2->individu);
+
+        newPopulationLast->individu = population->individu;
+        population->individu = NULL;
+        newPopulationLast = newPopulationLast->next;
+        newPopulationLast->individu = individu2->individu;
+        individu2->individu = NULL;
+        newPopulationLast = newPopulationLast->next;
+
+        while (population != NULL && population->individu == NULL) {
+            population = population->next;
         }
-        Population prevQ = p;
-        while (prevQ->next != q && prevQ->next != NULL) {
-            prevQ = prevQ->next;
-        }
-        prevQ->next = q->next;
-        newPopLast->next->next = p;
-        p = p->next;
-        newPopLast->next->next->next = NULL;
     }
-    if (nbIndividus(p) == 1) {
-        newPopLast = newPopulation;
-        while (newPopLast != NULL) {
-            newPopLast = newPopLast->next;
-        }
-        newPopLast = p;
-        newPopLast->next = NULL;
-    }
+    deletePopulation(populationInitiale);
     return newPopulation;
 }
 
@@ -67,17 +58,29 @@ Population getIndividuAtIndex(Population population, int index) {
     return population;
 }
 
-int getIndexOfIndividu(Population population, Individu individu) {
-    // Retourne l'index de l'individu donné
-    int i = 0;
-    while (population != NULL) {
-        if (population->individu == individu) {
-            return i;
+Population selectPopulation(Population population, int tselect) {
+    // Sélectionne les tselect premiers individus de la population et remplace le reste par des copies de ces individus
+    Population p = population;
+    Population selection = populationVide(tselect);
+    Population selectionLast = selection;
+    for (int i = 0; i < tselect; i++) {
+        selectionLast->individu = p->individu;
+        p = p->next;
+        if (selectionLast->next != NULL) {
+            selectionLast = selectionLast->next;
         }
-        population = population->next;
-        i++;
     }
-    return -1;
+    selectionLast->next = selection;
+
+    for (int i = tselect; i < nbIndividus(population); i++) {
+        copyIndividu(selection->individu, p->individu);
+        selection = selection->next;
+        p = p->next;
+    }
+    selection = selectionLast->next;
+    selectionLast->next = NULL;
+    deletePopulation(selection);
+    return population;
 }
 
 int nbIndividus(Population population) {
@@ -103,16 +106,16 @@ void afficherPopulation(Population population, char nom[]) {
     }
 }
 
-//clone une population et ses individus
-Population clonePopulation(Population population) {
-    Population clone = (Population) malloc(sizeof(IndivElem));
-    clone->individu = cloneIndividu(population->individu);
-    if (population->next != NULL) {
-        clone->next = clonePopulation(population->next);
+Population populationVide(int nbIndividus) {
+    // Créer une population vide
+    Population population = (Population) malloc(sizeof(IndivElem));
+    population->individu = NULL;
+    if (nbIndividus > 1) {
+        population->next = populationVide(nbIndividus - 1);
     } else {
-        clone->next = NULL;
+        population->next = NULL;
     }
-    return clone;
+    return population;
 }
 
 //supprime une population et ses individus
@@ -120,7 +123,9 @@ void deletePopulation(Population population) {
     if (population->next != NULL) {
         deletePopulation(population->next);
     }
-    deleteIndividu(population->individu);
+    if (population->individu != NULL) {
+        deleteIndividu(population->individu);
+    }
     free(population);
 }
 

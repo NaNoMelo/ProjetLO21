@@ -7,29 +7,33 @@
 #include "Individu/Individu.h"
 #include "Population/Population.h"
 
-#define taillePopulation 100
-#define tailleIndividu 16
+#define taillePopulation 10
+#define tailleIndividu 8
 #define nGen 200
 #define pCroise 0.5
-
+#define tSelect 5
 
 int main() {
-
     srand(time(NULL));
-    Population population = createPopulation(taillePopulation, tailleIndividu);
     Population last;
 
-    for (int i = 0; i < nGen; i++) {
-        population = croiserPopulation(population, pCroise);
-        last = population;
-        while (last->next != NULL) {
-            last = last->next;
-        }
-        quick_sort(population, NULL);
+    Population population = createPopulation(taillePopulation, tailleIndividu);
+    afficherPopulation(population, "Population initiale");
+
+    population = croiserPopulation(population, pCroise);
+    afficherPopulation(population, "Population croisée");
+
+    last = population;
+    while (last->next != NULL) {
+        last = last->next;
     }
-    afficherPopulation(population, "Population");
     quick_sort(population, last);
     afficherPopulation(population, "Population triée");
+
+    population = selectPopulation(population, tSelect);
+    afficherPopulation(population, "Population sélectionnée");
+
+    afficherPopulation(population, "Population finale");
 
     return 0;
 }

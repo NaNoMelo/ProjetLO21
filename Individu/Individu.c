@@ -4,14 +4,7 @@
 
 #define A (-1)
 #define B 1
-
-int intPow(int base, int exp) {
-    int result = 1;
-    for (int i = 0; i < exp; i++) {
-        result *= base;
-    }
-    return result;
-}
+#define pow2(n) (1 << (n))
 
 void afficherIndividu(Individu individu, char nom[]) {
     Individu p = individu;
@@ -41,7 +34,7 @@ int decodeIndividu(Individu individu) {
     int val = 0;
     double pow2;
     while (individu != NULL) {
-        pow2 = intPow(2, i);
+        pow2 = pow2(i);
         val += individu->val * pow2;
         individu = individu->next;
         i--;
@@ -63,7 +56,7 @@ int nbBits(Individu individu) {
 float quality(Individu individu) {
     // Retourne la qualité de l'individu
     int x = decodeIndividu(individu);
-    int pow = intPow(2, nbBits(individu));
+    int pow = pow2(nbBits(individu));
     float X = ((float) x / pow) * (B - A) + A;
     return X * X;
 }
@@ -81,16 +74,13 @@ void croiserIndividus(float pCroise, Individu individu1, Individu individu2) {
     }
 }
 
-//retourne un clone de l'individu
-Individu cloneIndividu(Individu individu) {
-    Individu clone = (Individu) malloc(sizeof(BitElem));
-    clone->val = individu->val;
-    if (individu->next != NULL) {
-        clone->next = cloneIndividu(individu->next);
-    } else {
-        clone->next = NULL;
+void copyIndividu(Individu source, Individu destination) {
+    // Copie l'source dans l'destination
+    while (source != NULL && destination != NULL) {
+        destination->val = source->val;
+        source = source->next;
+        destination = destination->next;
     }
-    return clone;
 }
 
 //supprime l'individu
@@ -99,25 +89,4 @@ void deleteIndividu(Individu individu) {
         deleteIndividu(individu->next);
     }
     free(individu);
-}
-
-//quciksort pour trier les individus d'une population par qualité
-void quickSort2(Individu *population, int debut, int fin) {
-    int gauche = debut - 1;
-    int droite = fin + 1;
-    const float pivot = quality(population[debut]);
-    if (debut >= fin) {
-        return;
-    }
-    while (1) {
-        do droite--; while (quality(population[droite]) > pivot);
-        do gauche++; while (quality(population[gauche]) < pivot);
-        if (gauche < droite) {
-            Individu tmp = population[gauche];
-            population[gauche] = population[droite];
-            population[droite] = tmp;
-        } else break;
-    }
-    quickSort2(population, debut, droite);
-    quickSort2(population, droite + 1, fin);
 }
