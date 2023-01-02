@@ -20,19 +20,20 @@ int main() {
     Population population = createPopulation(taillePopulation, tailleIndividu);
     afficherPopulation(population, "Population initiale");
 
-    population = croiserPopulation(population, pCroise);
-    afficherPopulation(population, "Population croisée");
+    for (int i = 0; i < nGen; i++) {
+        population = croiserPopulation(population, pCroise);
+//        afficherPopulation(population, "Population croisée");
 
-    last = population;
-    while (last->next != NULL) {
-        last = last->next;
+        last = population;
+        while (last->next != NULL) {
+            last = last->next;
+        }
+        quick_sort(population, last);
+//        afficherPopulation(population, "Population triée");
+
+        population = selectPopulation(population, tSelect);
+//        afficherPopulation(population, "Population sélectionnée");
     }
-    quick_sort(population, last);
-    afficherPopulation(population, "Population triée");
-
-    population = selectPopulation(population, tSelect);
-    afficherPopulation(population, "Population sélectionnée");
-
     afficherPopulation(population, "Population finale");
 
     return 0;

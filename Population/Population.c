@@ -77,9 +77,6 @@ Population selectPopulation(Population population, int tselect) {
         selection = selection->next;
         p = p->next;
     }
-    selection = selectionLast->next;
-    selectionLast->next = NULL;
-    deletePopulation(selection);
     return population;
 }
 
@@ -104,6 +101,7 @@ void afficherPopulation(Population population, char nom[]) {
         p = p->next;
         i++;
     }
+    printf("\n");
 }
 
 Population populationVide(int nbIndividus) {
