@@ -162,6 +162,17 @@ Population clonePopulation(Population population) {
     return clone;
 }
 
+Population populationVide(int nbIndividus) {
+    Population population = (Population) malloc(sizeof(IndivElem));
+    population->individu = NULL;
+    if (nbIndividus > 1) {
+        population->next = populationVide(nbIndividus - 1);
+    } else {
+        population->next = NULL;
+    }
+    return population;
+}
+
 /**
  * supprime une population et ses individus
  * @param population
@@ -170,7 +181,9 @@ void deletePopulation(Population population) {
     if (population->next != NULL) {
         deletePopulation(population->next);
     }
-    deleteIndividu(population->individu);
+    if (population->individu != NULL) {
+        deleteIndividu(population->individu);
+    }
     free(population);
 }
 
