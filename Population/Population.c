@@ -6,8 +6,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/**
+ * @brief Crée une population de taille toCreate et lui assigne des individus aléatoires de taille individuSize
+ * @param toCreate
+ * @param individuSize
+ * @return la population créée
+ */
 Population createPopulation(int toCreate, int individuSize) {
-    // Créer la population et la remplir avec des individus aléatoires
     Population population = (Population) malloc(sizeof(IndivElem));
     population->individu = createIndividu(individuSize);
     if (toCreate > 1) {
@@ -18,8 +23,13 @@ Population createPopulation(int toCreate, int individuSize) {
     return population;
 }
 
+/**
+ * @brief croise les individus de la population 2 à 2 aléatoirement
+ * @param population
+ * @param pCroise
+ * @return la population croisée
+ */
 Population croiserPopulation(Population population, float pCroise) {
-    // Croise la population en fonction de la probabilité de croisement
     Population populationInitiale = population;
     Population newPopulation = populationVide(nbIndividus(population));
     Population newPopulationLast = newPopulation;
@@ -50,16 +60,25 @@ Population croiserPopulation(Population population, float pCroise) {
     return newPopulation;
 }
 
+/**
+ * @brief Retourne la population à l'index donné
+ * @param population
+ * @return la population à l'index donné
+ */
 Population getIndividuAtIndex(Population population, int index) {
-    // Retourne l'individu à l'index donné
     for (int i = 0; i < index; i++) {
         population = population->next;
     }
     return population;
 }
 
+/**
+ * @brief Sélectionne les nbSelect premiers individus de la population et remplace le reste par des copies de ces individus
+ * @param population
+ * @param nbSelect
+ * @return la population sélectionnée
+ */
 Population selectPopulation(Population population, int nbSelect) {
-    // Sélectionne les nbSelect premiers individus de la population et remplace le reste par des copies de ces individus
     Population p = population;
     Population selection = populationVide(nbSelect);
     Population selectionLast = selection;
@@ -80,6 +99,11 @@ Population selectPopulation(Population population, int nbSelect) {
     return population;
 }
 
+/**
+ * @brief Retourne le nombre d'individus dans une population
+ * @param population
+ * @return le nombre d'individus dans la population
+ */
 int nbIndividus(Population population) {
 // Retourne le nombre d'individus de la population
     int i = 0;
@@ -90,22 +114,33 @@ int nbIndividus(Population population) {
     return i;
 }
 
-
+/**
+ * @brief Affiche la population et ses individus
+ * @param population
+ * @param nom
+ * @param a
+ * @param b
+ */
 void afficherPopulation(Population population, char nom[], float a, float b) {
     // Affiche la population
     Population p = population;
     int i = 0;
     printf("%s : \n", nom);
     while (p != NULL) {
-        afficherIndividu(p->individu, "Individu", a, b, 0, 0);
+        afficherIndividu(p->individu, "Individu", a, b);
         p = p->next;
         i++;
     }
     printf("\n");
 }
 
+/**
+ * @brief Crée une population sans en créer les individus
+ * @param nbIndividus
+ * @return
+ */
 Population populationVide(int nbIndividus) {
-    // Créer une population vide
+    // Créer une population dont les individus ne sont pas définis
     Population population = (Population) malloc(sizeof(IndivElem));
     population->individu = NULL;
     if (nbIndividus > 1) {
@@ -116,7 +151,10 @@ Population populationVide(int nbIndividus) {
     return population;
 }
 
-//supprime une population et ses individus
+/**
+ * @brief libère l'espace mémoire assigné à une population et ses individus
+ * @param population
+ */
 void deletePopulation(Population population) {
     if (population->next != NULL) {
         deletePopulation(population->next);
@@ -127,6 +165,14 @@ void deletePopulation(Population population) {
     free(population);
 }
 
+/**
+ * @brief Partitionne la population de sorte à ce que tous les éléments à droite du pivot soient plus grands que le pivot et tous les éléments à gauche du pivot soient plus petits que le pivot
+ * @param first
+ * @param last
+ * @param a
+ * @param b
+ * @return la population partitionnée
+ */
 Population partition(Population first, Population last, float a, float b) {
     // Get first node of given linked list
     Population pivot = first;
@@ -156,6 +202,14 @@ Population partition(Population first, Population last, float a, float b) {
     return pivot;
 }
 
+/**
+ * @brief Trie la population par ordre décroissant de qualité
+ * @param first
+ * @param last
+ * @param a
+ * @param b
+ * @return la population triée
+ */
 void quick_sort(Population first, Population last, float a, float b) {
     if (first == last) {
         return;

@@ -11,8 +11,36 @@
 #define nGen 200
 #define A 0.1
 #define B 5
+#define MODE 0
+#define taillePopulation 100
+#define pCroise 0.5
+#define nbSelect 50
 
 int main() {
+#if MODE == 0
+    srand(time(NULL));
+    Population last;
+    Population population = createPopulation(taillePopulation, tailleIndividu);
+    for (int k = 1; k <= nGen; k++) {
+        population = croiserPopulation(population, pCroise);
+        last = population;
+        while (last->next != NULL) {
+            last = last->next;
+        }
+        quick_sort(population, last, A, B);
+        population = selectPopulation(population, nbSelect);
+        last = population;
+        while (last->next != NULL) {
+            last = last->next;
+        }
+        quick_sort(population, last, A, B);
+        printf("Generation %d : ", k);
+        afficherIndividu(population->individu, "Meilleur individu", A, B);
+    }
+    deletePopulation(population);
+#endif
+#if MODE == 1
+    // Crée un fichier .csv avec les résultats de la simulation
     FILE *f = fopen("result.csv", "w");
     if (f == NULL) {
         printf("Error opening file!\n");
@@ -29,7 +57,7 @@ int main() {
                 float pCroise = pCroiseS[i];
                 int nbSelect = tSelectS[j] * taillePopulation;
                 Population population = createPopulation(taillePopulation, tailleIndividu);
-                for (int k = 0; k < nGen; k++) {
+                for (int k = 1; k <= nGen; k++) {
                     population = croiserPopulation(population, pCroise);
                     last = population;
                     while (last->next != NULL) {
@@ -53,5 +81,6 @@ int main() {
         }
     }
     fclose(f);
+#endif
     return 0;
 }
